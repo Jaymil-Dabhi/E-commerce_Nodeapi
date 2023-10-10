@@ -2,7 +2,7 @@ const Cart = require("../models/cartModel");
 
 const add_to_cart = async(req,res)=>{
    try {
-       const cart_obj = new Cart({
+        const cart_obj = new Cart({
         product_id:req.body.product_id,
         price:req.body.price,
         vendor_id:req.body.vendor_id,

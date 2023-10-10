@@ -191,10 +191,66 @@ const delete_product = async(req,res)=>{
      }
   }
 
+
+// send data with pagination and sorted form
+
+const paginate = async(req,res)=>{
+  try {
+      var page = req.body.page;
+      var sort = req.body.sort;
+
+      var product_data;
+      var skip;
+
+      
+      if(page <= 1){
+          skip = 0;
+      }
+      else{
+          skip = (page-1)*2;
+      }
+   
+      if(sort){
+          var customsort;
+          if(sort == 'name'){
+            customsort = {
+                name:1
+            }
+          }
+          else if(sort == '_id'){
+            customsort = {
+              name:1
+            }
+          }
+
+          else if(sort == 'price'){
+            customsort = {
+              name:1
+            }
+          }
+          else if(sort == 'category_id'){
+            customsort = {
+              name:1
+            }
+          }
+          product_data = await Product.find().sort(customsort).skip(skip).limit(3);
+      }
+      else{
+          product_data = await Product.find().skip(skip).limit(3);
+      }
+
+      res.status(200).send({ success:true, msg:'Product Details', data:product_data });
+
+  } catch (error) {
+      res.status(400).send({ success:false,msg:error.message });
+  }
+}
+
 module.exports = {
    add_product,
    get_products,
    update_product,
    delete_product,
-   searchProduct
+   searchProduct,
+   paginate
 }

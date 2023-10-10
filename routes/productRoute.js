@@ -45,4 +45,6 @@ product_route.delete('/delete-product/:id',auth,product_controller.delete_produc
 
 product_route.get('/search-product',auth,product_controller.searchProduct);
 
+product_route.post('/paginate',auth,product_controller.paginate);
+
 module.exports = product_route;

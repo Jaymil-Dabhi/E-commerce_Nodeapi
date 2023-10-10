@@ -34,6 +34,17 @@ app.use('/api',common_route);
 const cart_route = require("./routes/cartRoute");
 app.use('/api',cart_route);
 
+
+//address route
+const address_route = require("./routes/addressRoute.js");
+app.use('/api',address_route);
+
+
+//buy product route
+const buy_product_route = require("./routes/buyProductRoute");
+app.use('/api',buy_product_route);
+
+
 app.listen(3000, function(){
     console.log("Server is ready");
 });
