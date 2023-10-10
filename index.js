@@ -26,6 +26,14 @@ app.use('/api',subcategory_routes);
 const product_routes = require("./routes/productRoute");
 app.use('/api',product_routes);
 
+//common route
+const common_route = require("./routes/commonRoute");
+app.use('/api',common_route);
+
+//cart route
+const cart_route = require("./routes/cartRoute");
+app.use('/api',cart_route);
+
 app.listen(3000, function(){
     console.log("Server is ready");
 });

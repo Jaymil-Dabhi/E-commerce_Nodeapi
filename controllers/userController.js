@@ -16,7 +16,7 @@ const sendResetPasswordMail = async(name, email, token)=>{
             requireTLS:true,
             auth:{
                 user:config.emailUser,
-                pass:config.emailPassword.emailPassword
+                pass:config.emailPassword
             }
         });
 
@@ -24,7 +24,7 @@ const sendResetPasswordMail = async(name, email, token)=>{
             from:config.emailUser,
             to:email,
             subject:'For Reset Password',
-            html:'<p> Hii '+name+', Please copy the link and <a href="http://127.0.0.1:3000/api/reset-password?token='+token+'"> reset your password</a></p>'
+            html:'<p> Hii '+name+', Please copy the link and <a href="http://127.0.0.1:3000/api/reset-password?token='+token+'"> reset your password</a>'
         }
         transporter.sendMail(mailOptions,function(error,info){
             if (error) {
@@ -74,7 +74,7 @@ const register_user = async(req, res)=>{
 
         const userData = await User.findOne({email:req.body.email});
         if(userData){
-            res.status(200).send({success:false,msg:"This email is already exists"});
+            res.status(400).send({success:false,msg:"This email is already exists"});
         } else {
            const user_data = await user.save();
            res.status(200).send({success:true,data:user_data});
@@ -106,7 +106,7 @@ const user_login = async(req,res)=>{
                   image:userData.image,
                   mobile:userData.mobile,
                   type:userData.type,
-                  accessToken:tokenData
+                  token:tokenData
                }
                const response = {
                    success:true,
@@ -116,10 +116,10 @@ const user_login = async(req,res)=>{
                res.status(200).send(response);
 
            } else {
-              res.status(200).send({success:false,msg:"Login details are incorrect"});
+              res.status(400).send({success:false,msg:"Login details are incorrect"});
            }
         } else {
-            res.status(200).send({success:false,msg:"Login details are incorrect"});
+            res.status(400).send({success:false,msg:"Login details are incorrect"});
         }
 
     } catch (error) {
@@ -145,7 +145,7 @@ const update_password = async(req,res)=>{
                password:newPassword
            }});
 
-           res.status(200).send({ success:true, msg:"Your password has been updated" });
+           res.status(200).send({ success:true, msg:"Your password has been updated",data:userData });
         }
         else {
             res.status(400).send({ success:false, msg:"User Id not found!" });
@@ -158,10 +158,11 @@ const update_password = async(req,res)=>{
 
 const forget_password = async(req,res)=>{
     try {
-        const userData = await User.findOne({email:req.body.email});
+        const email = req.body.email;
+        const userData = await User.findOne({email:email});
         if(userData){
             const randomString = randomstring.generate();
-            const data = await User.updateOne({email:userData.email},{$set:{token:randomString}});
+            const data = await User.updateOne({email:email},{$set:{token:randomString}});
             sendResetPasswordMail(userData.name,userData.email,randomString);
             res.status(200).send({success:true,msg:"please check your inbox of mail and reset your password."});
         }
@@ -184,7 +185,7 @@ const reset_password = async(req, res)=>{
             res.status(200).send({success:true,msg:"User Password has been reset",data:userData});
         }
         else{
-            res.status(200).send({success:true,msg:"This link has been expired."});
+            res.status(400).send({success:false,msg:"This link has been expired."});
         }
    } catch (error) {
        res.status(400).send({success:false,msg:error.message});
@@ -211,6 +212,7 @@ const renew_token = async(id)=>{
 
         const token = await jwt.sign({ _id:id },newSecretJwt);
         return token;
+        
     } catch (error) {
         res.status(400).send({success:false,msg:error.message});
     }

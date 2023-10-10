@@ -39,4 +39,10 @@ product_route.post('/add-product',upload.array('images'),auth,product_controller
 
 product_route.get('/get-products',auth,product_controller.get_products);
 
+product_route.put('/update-product/:id',auth,product_controller.update_product);
+
+product_route.delete('/delete-product/:id',auth,product_controller.delete_product);
+
+product_route.get('/search-product',auth,product_controller.searchProduct);
+
 module.exports = product_route;

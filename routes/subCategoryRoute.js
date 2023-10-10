@@ -14,7 +14,7 @@ subcategory_route.post("/add-sub-category",auth,subcategory_controller.create_su
 
 subcategory_route.get("/get-sub-category",auth,subcategory_controller.get_subcategories);
 
-subcategory_route.put("/update-sub-category",auth,subcategory_controller.update_subcategories);
+subcategory_route.put("/update-sub-category/:id",auth,subcategory_controller.update_subcategories);
 
 subcategory_route.delete("/delete-sub-category/:id",auth,subcategory_controller.delete_subcategories);
 

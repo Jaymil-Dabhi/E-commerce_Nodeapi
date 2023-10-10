@@ -36,6 +36,8 @@ var productSchema = mongoose.Schema({
     }
 });
 
+productSchema.index({ name: 'text' });
+
 function arrayLimit(val){
     return val.length <= 5;
 }
