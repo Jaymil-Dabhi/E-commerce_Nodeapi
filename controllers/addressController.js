@@ -14,7 +14,7 @@ const add_address = async(req,res)=>{
             const updated_data = await Address.findOneAndUpdate(
                 {user_id:req.body.user_id},
                 {$set:{ address:addAddress }},
-                {returnDocument:"after"}
+                {returnDocument:"after"}     
             );
             
             res.status(200).send({ success:true,msg:"address details",data:updated_data });

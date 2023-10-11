@@ -9,14 +9,22 @@ const cartSchema = mongoose.Schema({
         type:String,
         required:true
     },
-    vendor_id:{
+    user_id:{
         type:String,
         required:true
     },
-    store_id:{
+    name:{
         type:String,
         required:true
     }
+    // vendor_id:{
+    //     type:String,
+    //     required:true
+    // },
+    // store_id:{
+    //     type:String,
+    //     required:true
+    // }
 });
 
 module.exports = mongoose.model("Cart",cartSchema);

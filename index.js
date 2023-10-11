@@ -45,6 +45,11 @@ const buy_product_route = require("./routes/buyProductRoute");
 app.use('/api',buy_product_route);
 
 
+//payment route
+const paymentRoute = require('./routes/paymentRoute');
+app.use('/api',paymentRoute);
+
+
 app.listen(3000, function(){
     console.log("Server is ready");
 });

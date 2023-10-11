@@ -219,18 +219,18 @@ const paginate = async(req,res)=>{
           }
           else if(sort == '_id'){
             customsort = {
-              name:1
+              _id:1
             }
           }
 
           else if(sort == 'price'){
             customsort = {
-              name:1
+              price:1
             }
           }
           else if(sort == 'category_id'){
             customsort = {
-              name:1
+              category_id:1
             }
           }
           product_data = await Product.find().sort(customsort).skip(skip).limit(3);
