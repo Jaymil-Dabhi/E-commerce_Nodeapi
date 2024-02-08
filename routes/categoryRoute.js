@@ -13,6 +13,8 @@ category_route.post('/add-category',auth,category_controller.addCategory);
 
 category_route.get('/get-categories',auth,category_controller.get_categories);
 
+category_route.get('/get-allCategories',category_controller.get_allCategories);
+
 category_route.put('/update-categories/:id',auth,category_controller.update_categories);
 
 category_route.delete('/delete-categories/:id',auth,category_controller.delete_categories);

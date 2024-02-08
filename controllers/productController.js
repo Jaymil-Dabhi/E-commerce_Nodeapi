@@ -6,64 +6,30 @@ const Store_controller = require("../controllers/storeController");
 const add_product = async(req,res)=>{
     try {
 
-        const product_data = await Product.find();
-        if(product_data.length > 0){
-            let checking = false;
-            for(let i=0;i<product_data.length;i++){
-              if(product_data[i]['name'].toLowerCase() === req.body.name.toLowerCase()){
-                checking = true;
-                break;
-              }
-            }
-
-            if(checking == false){
-              var arrImages = [];
-              for(let i=0;i<req.files.length;i++){
-                  arrImages[i] = req.files[i].filename;
-              }
+      const product_data = await Product.find();
+      const productExists = product_data.some(product => product.name.toLowerCase() === req.body.name.toLowerCase());
       
-              var product = new Product({
-                  vendor_id: req.body.vendor_id,
-                  store_id: req.body.store_id,
-                  name: req.body.name,
-                  price: req.body.price,
-                  discount: req.body.discount,
-                  category_id: req.body.category_id,
-                  sub_cat_id: req.body.sub_cat_id,
-                  images: arrImages
-              });
+      const arrImages = req.files.map(file => file.filename);
       
-              const prod_data = await product.save();
+      const product = new Product({
+          vendor_id: req.body.vendor_id,
+          store_id: req.body.store_id,
+          name: req.body.name,
+          price: req.body.price,
+          discount: req.body.discount,
+          category_id: req.body.category_id,
+          sub_cat_id: req.body.sub_cat_id,
+          images: arrImages
+      });
       
-              res.status(200).send({ success:true, msg:"product Details",data:prod_data });
-            }
-            else {
-              res.status(400).send({ success:false, msg: "This Product ("+req.body.name+") is already exists."})
-            }
-        }
-
-        else {
-          var arrImages = [];
-          for(let i=0;i<req.files.length;i++){
-              arrImages[i] = req.files[i].filename;
-          }
-  
-          var product = new Product({
-              vendor_id: req.body.vendor_id,
-              store_id: req.body.store_id,
-              name: req.body.name,
-              price: req.body.price,
-              discount: req.body.discount,
-              category_id: req.body.category_id,
-              sub_cat_id: req.body.sub_cat_id,
-              images: arrImages
-          });
-  
-          const prod_data = await product.save();
-  
-          res.status(200).send({ success:true, msg:"product Details",data:prod_data });
-        }
-        
+      const prod_data = await product.save();
+      
+      if (productExists) {
+          res.status(400).send({ success: false, msg: "This Product (" + req.body.name + ") already exists." });
+      } else {
+          res.status(200).send({ success: true, msg: "Product Details", data: prod_data });
+      }
+      
 
     } catch (error) {
         res.status(400).send({ success:false,msg:error.message });
@@ -97,6 +63,8 @@ const get_products = async(req,res)=>{
                     "category":cat_data[i]['category'],
                     "product":product_data
                 });
+
+                
             }
             res.status(200).send({success:true, msg:"Product Details",data:send_data});
         } else {

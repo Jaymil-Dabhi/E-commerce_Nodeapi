@@ -2,6 +2,9 @@ const Cart = require("../models/cartModel");
 const User = require("../models/userModel");
 
 const add_to_cart = async(req,res)=>{
+
+
+    
    try {
         // const userId = req.body.user_id;
 

@@ -4,38 +4,20 @@ const addCategory = async(req,res)=>{
 
    try {
 
-       const category_data = await Category.find();
-       if(category_data.length > 0){
-
-          let checking = false;
-          for(let i=0;i<category_data.length;i++){
-            if(category_data[i]['category'].toLowerCase() === req.body.category.toLowerCase()){
-                checking = true;
-                break;
-            }
-          }
-
-          if( checking == false){
-            const category = new Category({
-                category:req.body.category
-            });
-       
-            const cat_data = await category.save();
-            res.status(200).send({success:true, msg:"Category Data",data:cat_data});
-          }
-          else{
-            res.status(200).send({success:true, msg:"This Category ("+req.body.category+") is already exists."});
-              
-          }
-       }
-       else{
-            const category = new Category({
-                category:req.body.category
-            });
-       
-            const cat_data = await category.save();
-            res.status(200).send({success:true, msg:"Category Data",data:cat_data});
-       }
+    const category_data = await categoryService.Category.find();
+    const categoryExists = category_data.some(cat => cat.category.toLowerCase() === req.body.category.toLowerCase());
+    
+    const category = new Category({
+        category: req.body.category
+    });
+    
+    const cat_data = await category.save();
+    
+    if (categoryExists) {
+        res.status(200).send({ success: false, msg: "This Category (" + req.body.category + ") already exists." });
+    } else {
+        res.status(200).send({ success: true, msg: "Category Data", data: cat_data });
+    }
    } catch (error) {
       res.status(400).send({success:false,msg:error.message});
    }
@@ -46,6 +28,20 @@ const get_categories = async(req,res)=>{
   try {
     const get_category = await Category.find( req.category_id );
     res.status(200).json(get_category);
+      
+        return Category.find();
+  } catch (error) {
+    res.status(400).send({success:false,msg:error.message});
+  }
+}
+
+
+const get_allCategories = async(req,res)=>{
+  try {
+    const options = pick(req.query, ['sortBy', 'limit', 'page']);
+    const category = await categoryService.get_allCategories({ options });
+  
+    res.status(200).json(category);
       
         return Category.find();
   } catch (error) {
@@ -116,5 +112,6 @@ module.exports = {
     addCategory,
     update_categories,
     get_categories,
-    delete_categories
+    delete_categories,
+    get_allCategories
 }
